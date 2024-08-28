@@ -34,4 +34,6 @@ flask run
 ```
 
 ## Автор
-Автор
+OliaPlis
+PliskinaOlia@gmail.com
+telegram: @PliskinaOlia
