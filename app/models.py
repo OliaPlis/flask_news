@@ -47,6 +47,7 @@ class News(db.Model):
     category = db.relationship('Category', back_populates='news')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', back_populates='news')
+    image = db.Column(db.String(255))
 
     def __repr__(self):
         return f'News {self.id}: ({self.title})'

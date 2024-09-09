@@ -14,5 +14,5 @@ login_manager.login_message_category = 'alert-warning'
 from . import models, views  # noqa
 
 db.create_all()
-# cd C:\Users\Proffesional\PycharmProjects\pythonProject2\4\4.4\
+# cd C:\Users\Proffesional\PycharmProjects\pythonProject2\4\flask_news\
 # flask run --debug

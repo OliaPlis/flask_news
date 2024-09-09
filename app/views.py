@@ -1,13 +1,21 @@
+from pathlib import Path
+
 from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
+import sqlite3
+
+from werkzeug.utils import secure_filename
 
 from . import app, db
 from .forms import NewsForm, FeedbackForm, LoginForm, RegistrationForm, CategoryForm
 
 from .models import Category, News, Feedback, User
 
-from .forms import NewsForm, LoginForm, RegistrationForm # CategoryForm
+from .forms import NewsForm, LoginForm, RegistrationForm  # CategoryForm
 from .models import Category, News, User
+
+BASEDIR = Path(__file__).parent
+UPLOAD_FOLDER = BASEDIR / 'static' / 'images'
 
 
 @app.route('/')
@@ -41,7 +49,8 @@ def news_detail(id):
     categories = Category.query.all()
     return render_template('news_detail.html',
                            news=news,
-                           categories=categories)
+                           categories=categories
+                           )
 
 
 @app.route('/category/<int:id>')
@@ -65,6 +74,12 @@ def add_news():
         news.title = form.title.data
         news.text = form.text.data
         news.category_id = form.category.data
+        image = form.image.data
+        if image:
+            image_name = secure_filename(image.filename)
+            UPLOAD_FOLDER.mkdir(exist_ok=True)
+            image.save(UPLOAD_FOLDER / image_name)
+            news.image = image_name
         db.session.add(news)
         db.session.commit()
         return redirect(url_for('news_detail', id=news.id))
@@ -131,3 +146,23 @@ def registration():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+def get_db_connection():
+    conn = sqlite3.connect('app\db.sqlite3')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+@app.route('/delete_news/<int:id>', methods=['POST'])
+def delete_news(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM news WHERE id = ?', (id,))
+    conn.commit()
+    if cursor.rowcount > 0:
+        flash('Новость была успешно удалена.', 'success')
+    else:
+        flash('Новость не найдена.', 'error')
+    conn.close()
+    return redirect(url_for('index'))

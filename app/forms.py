@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectField, SubmitField, PasswordField, BooleanField
+from flask_wtf.file import FileRequired, FileAllowed
+from wtforms import StringField, TextAreaField, SelectField, SubmitField, PasswordField, BooleanField, FileField
 from wtforms.fields.simple import EmailField
 from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo
 
@@ -24,11 +25,12 @@ class NewsForm(FlaskForm):
                     Length(max=255, message='Введите заголовок до 255 символов')]
     )
     text = TextAreaField(
-        'TekcT',
+        'Текст',
         validators=[DataRequired(message="Поле не должно быть пустым")]
     )
+    image = FileField('Изображение',
+                      validators=[FileAllowed(['jpg', 'jpeg', 'png'], message="Неверный формат файла")])
     category = SelectField('Категории', choices=get_categories(), validators=[Optional()])
-    # category = SelectField(choices=get_categories())
     submit = SubmitField('Добавить')
 
 
@@ -40,6 +42,7 @@ class FeedbackForm(FlaskForm):
     submit = SubmitField('Добавить')
 
 
+# U+2B50
 class LoginForm(FlaskForm):
     username = StringField("Имя пользователя", validators=[DataRequired()])
     password = PasswordField("Пароль", validators=[DataRequired()])

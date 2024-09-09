@@ -3,10 +3,24 @@
 {{ news.title }}
 {% endblock title %}
 {% block content %}
-    <h1>{{ news.title }}</h1>
-    {% if news.category %}
-        <span>Категория: <a href="{{url_for('news_in_category', id=news.category.id)}}">{{ news.category.title }}</a></span>
-    {% endif %}
-    <hr>
-    <p>{{ news.text }}</p>
+<h1>{{ news.title }}</h1>
+{% if news.category %}
+<span>Категория: <a href="{{ url_for('news_in_category', id=news.category.id) }}">{{ news.category.title }}</a></span>
+{% endif %}
+<hr>
+<div class="row">
+
+    <div class="col-md-7"><p>{{ news.text }}</p>
+        <form action="{{ url_for('delete_news', id=news.id) }}" method="POST">
+            <button type="Подтвердить" onclick="return confirm('Вы уверены, что хотите удалить эту новость?');"
+                    class="btn btn-primary">Удалить новость
+            </button>
+        </form>
+    </div>
+    <div class="col-md-4">
+        {% if news.image %}
+        <img class="img-fluid" src="{{ url_for('static', filename='images/' + news.image) }}">
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}
