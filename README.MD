@@ -33,12 +33,5 @@ SECRET_KEY=YOUR_SECRET_KEY
 flask run
 ```
 
-## Авторы
-[OliaPlis](https://github.com/OliaPlis)
-- Email: pliskinaolia@gmail.com
-- GitHub: [OliaPlis](https://github.com/OliaPlis)
-
-
-[iwannafly69](https://github.com/1sten)
-- Email: iwannafly666@yandex.ru
-- GitHub: [iwannafly69](https://github.com/iwannafly69)
+## Автор
+Автор
