@@ -104,6 +104,26 @@ def feedback():
     return render_template('feedback.html', form=form, feedbacks=feedbacks)
 
 
+def get_db_connection():
+    # conn = sqlite3.connect('/home/pliskinaolia/flask_news/app/db.sqlite3')
+    conn = sqlite3.connect('app/db.sqlite3')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+@app.route('/delete_news/<int:id>', methods=['POST'])
+def delete_news(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM news WHERE id = ?', (id,))
+    conn.commit()
+    if cursor.rowcount > 0:
+        flash('Новость была успешно удалена.', 'success')
+    else:
+        flash('Новость не найдена.', 'error')
+    conn.close()
+    return redirect(url_for('index'))
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -145,23 +165,3 @@ def registration():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-
-def get_db_connection():
-    conn = sqlite3.connect('/home/pliskinaolia/flask_news/app/db.sqlite3')
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-@app.route('/delete_news/<int:id>', methods=['POST'])
-def delete_news(id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM news WHERE id = ?', (id,))
-    conn.commit()
-    if cursor.rowcount > 0:
-        flash('Новость была успешно удалена.', 'success')
-    else:
-        flash('Новость не найдена.', 'error')
-    conn.close()
-    return redirect(url_for('index'))
